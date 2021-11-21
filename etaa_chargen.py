@@ -144,8 +144,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.charnameEdit.setDisabled(True)
         self.ageEdit.setDisabled(True)
         self.genderEdit.setDisabled(True)
+        self.rankBox.setDisabled(True)
         self.deptBox.setDisabled(True)
-        self.rankDisplay.setDisabled(True)
         self.levelBox.setDisabled(True)
         self.xpEdit.setDisabled(True)
         self.agilitySkill.valueChanged.connect(self.agilitySkill_valueChanged)
@@ -183,15 +183,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.traitsDisplay.setPlainText('')
         self.backstoryDisplay.setPlainText('')
         self.notesDisplay.setPlainText('')
+        self.rank_choice = ['Choose', 'American', 'British', 'Egyptian', 'French', 'German', 'Ottoman']
+        for i in self.rank_choice:
+            self.rankBox.addItem(i)
+        self.rankBox.setCurrentIndex(0)
+        self.rankBox.currentIndexChanged.connect(self.rankBox_changed)
         self.dept_choice = ['Choose', 'Porter', 'Archaeologist', 'Psychiatrist', 'Security', 'Professor', 'Cleric', 'Diabolist', 'Psychic']
         for i in self.dept_choice:
             self.deptBox.addItem(i)
         self.deptBox.setCurrentIndex(0)
         self.deptBox.currentIndexChanged.connect(self.deptBox_changed)
-        self.dept_rank = 'Comrade'
         self.dept_skill = ['', 'Body', 'Mind', 'Spirit', 'Combat', 'Strange', 'Divine', 'Occult', 'Psionic']
         self.dept_item = ['', 'Crowbar', 'Pistol +10 Bullets', 'First Aid Kit', 'Rifle +6 Bullets', 'Map', 'Holy Book', 'Dagger', 'Tarot Deck']
 
+        self.rank_not_chosen = True
         self.department_not_chosen = True
 
         self.char_level = 1
@@ -274,8 +279,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.charnameEdit.setDisabled(True)
             self.ageEdit.setDisabled(True)
             self.genderEdit.setDisabled(True)
+            self.rankBox.setDisabled(True)
             self.deptBox.setDisabled(True)
-            self.rankDisplay.setDisabled(True)
             self.levelBox.setDisabled(True)
             self.xpEdit.setDisabled(True)
             self.armorDisplay.setDisabled(True)
@@ -475,8 +480,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.temppsychokinesisSkill = self.psychokinesisSkill.value()
         self.temptelepathySkill = self.telepathySkill.value()
 
+        self.rankBox.setCurrentIndex(0)
+
         self.deptBox.setCurrentIndex(0)
 
+        self.rank_not_chosen = True
         self.department_not_chosen = True
 
         self.levelBox.setCurrentIndex(0)
@@ -509,6 +517,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.additional_skill_points = 12
         self.additional2Display.setText(str(self.additional_skill_points))
 
+        self.rankBox.setDisabled(True)
         self.deptBox.setDisabled(True)
         self.levelBox.setDisabled(True)
 
@@ -708,34 +717,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempagilitySkill = self.agilitySkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:    
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def beautySkill_valueChanged(self):
         '''
@@ -749,34 +764,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempbeautySkill = self.beautySkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
 
     def strengthSkill_valueChanged(self):
         '''
@@ -793,34 +814,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempstrengthSkill = self.strengthSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def knowledgeSkill_valueChanged(self):
         '''
@@ -834,34 +861,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempknowledgeSkill = self.knowledgeSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def perceptionSkill_valueChanged(self):
         '''
@@ -875,34 +908,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempperceptionSkill = self.perceptionSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def technologySkill_valueChanged(self):
         '''
@@ -916,34 +955,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.temptechnologySkill = self.technologySkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
         
     def charismaSkill_valueChanged(self):
         '''
@@ -957,34 +1002,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempcharismaSkill = self.charismaSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def empathySkill_valueChanged(self):
         '''
@@ -998,34 +1049,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempempathySkill = self.empathySkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def focusSkill_valueChanged(self):
         '''
@@ -1039,34 +1096,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempfocusSkill = self.focusSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def boxingSkill_valueChanged(self):
         '''
@@ -1080,34 +1143,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempboxingSkill = self.boxingSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def meleeSkill_valueChanged(self):
         '''
@@ -1121,34 +1190,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempmeleeSkill = self.meleeSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def rangedSkill_valueChanged(self):
         '''
@@ -1162,34 +1237,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.temprangedSkill = self.rangedSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def artSkill_valueChanged(self):
         '''
@@ -1203,34 +1284,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempartSkill = self.artSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def languagesSkill_valueChanged(self):
         '''
@@ -1244,34 +1331,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.templanguagesSkill = self.languagesSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def scienceSkill_valueChanged(self):
         '''
@@ -1285,34 +1378,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempscienceSkill = self.scienceSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def blessSkill_valueChanged(self):
         '''
@@ -1326,34 +1425,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempblessSkill = self.blessSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def exorcismSkill_valueChanged(self):
         '''
@@ -1367,34 +1472,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempexorcismSkill = self.exorcismSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def healingSkill_valueChanged(self):
         '''
@@ -1408,34 +1519,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.temphealingSkill = self.healingSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def demonologySkill_valueChanged(self):
         '''
@@ -1449,34 +1566,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempdemonologySkill = self.demonologySkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def metamorphosisSkill_valueChanged(self):
         '''
@@ -1490,34 +1613,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempmetamorphosisSkill = self.metamorphosisSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def necromancySkill_valueChanged(self):
         '''
@@ -1531,34 +1660,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempnecromancySkill = self.necromancySkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def clairvoyanceSkill_valueChanged(self):
         '''
@@ -1572,34 +1707,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.tempclairvoyanceSkill = self.clairvoyanceSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def psychokinesisSkill_valueChanged(self):
         '''
@@ -1613,34 +1754,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.temppsychokinesisSkill = self.psychokinesisSkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
-            self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
     
     def telepathySkill_valueChanged(self):
         '''
@@ -1654,44 +1801,63 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.additional2Display.setText('<span style=" color:#ff0000;">' + str(self.additional_skill_points) + '</span>')
         self.temptelepathySkill = self.telepathySkill.value()
         if self.additional_skill_points == 0:
-            if self.department_not_chosen:
-                self.deptBox.setDisabled(False)
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(False)
             else:
-                self.levelBox.setDisabled(False)
-                self.charnameEdit.setDisabled(False)
-                self.ageEdit.setDisabled(False)
-                self.genderEdit.setDisabled(False)
-                self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
-                        self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
-                        self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
-                        self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
-                        self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
-                        self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
-                        self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
-                        self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
-                self.saveButton.setDisabled(False)
-                self.actionSave.setDisabled(False)
+                if self.department_not_chosen:
+                    self.deptBox.setDisabled(False)
+                else:
+                    self.levelBox.setDisabled(False)
+                    self.charnameEdit.setDisabled(False)
+                    self.ageEdit.setDisabled(False)
+                    self.genderEdit.setDisabled(False)
+                    self.rewardDisplay.setText(str(self.agilitySkill.value() + self.beautySkill.value() + self.strengthSkill.value() +
+                            self.knowledgeSkill.value() + self.perceptionSkill.value() + self.technologySkill.value() +
+                            self.charismaSkill.value() + self.empathySkill.value() + self.focusSkill.value() +
+                            self.boxingSkill.value() + self.meleeSkill.value() + self.rangedSkill.value() +
+                            self.artSkill.value() + self.languagesSkill.value() + self.scienceSkill.value() +
+                            self.blessSkill.value() + self.exorcismSkill.value() + self.healingSkill.value() +
+                            self.demonologySkill.value() + self.metamorphosisSkill.value() + self.necromancySkill.value() +
+                            self.clairvoyanceSkill.value() + self.psychokinesisSkill.value() + self.telepathySkill.value()) + 'xp')
+                    self.saveButton.setDisabled(False)
+                    self.actionSave.setDisabled(False)
         else:
+            if self.rank_not_chosen:
+                self.rankBox.setDisabled(True)
+            else:
+                self.deptBox.setDisabled(True)
+                self.levelBox.setDisabled(True)
+                self.charnameEdit.setDisabled(True)
+                self.ageEdit.setDisabled(True)
+                self.genderEdit.setDisabled(True)
+                self.rewardDisplay.setText('None')
+                self.saveButton.setDisabled(True)
+                self.actionSave.setDisabled(True)
+                self.printButton.setDisabled(True)
+                self.actionPrint.setDisabled(True)
+    
+    def rankBox_changed(self):
+        '''
+        A nationality was chosen for the character
+        '''
+        if self.rankBox.currentIndex() == 0:
+            self.rank_chosen = ''
             self.deptBox.setDisabled(True)
-            self.levelBox.setDisabled(True)
-            self.charnameEdit.setDisabled(True)
-            self.ageEdit.setDisabled(True)
-            self.genderEdit.setDisabled(True)
-            self.rewardDisplay.setText('None')
-            self.saveButton.setDisabled(True)
-            self.actionSave.setDisabled(True)
-            self.printButton.setDisabled(True)
-            self.actionPrint.setDisabled(True)
+            self.rank_not_chosen = True
+        else:
+            self.rank_chosen = self.rank_choice[self.rankBox.currentIndex()]
+            self.rankBox.setDisabled(True)
+            self.deptBox.setDisabled(False)
+            self.rank_not_chosen = False
     
     def deptBox_changed(self):
         '''
         A crew department was chosen for the character
         '''
+        self.rankBox.setDisabled(True)
         self.itemsDisplay.setPlainText(self.starting_items)
         if self.deptBox.currentIndex() == 0:
             self.dept_chosen = ''
-            self.rankDisplay.setDisabled(True)
-            self.rankDisplay.setText('')
             self.bodyScore.setDisabled(False)
             self.mindScore.setDisabled(False)
             self.spiritScore.setDisabled(False)
@@ -1751,8 +1917,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.psychokinesisSkill.setDisabled(True)
             self.telepathySkill.setDisabled(True)
             self.dept_chosen = self.dept_choice[self.deptBox.currentIndex()]
-            self.rankDisplay.setDisabled(False)
-            self.rankDisplay.setText(self.dept_rank)
             self.dept_skill_chosen = self.dept_skill[self.deptBox.currentIndex()]
             self.dept_item_chosen = self.dept_item[self.deptBox.currentIndex()]
             if self.dept_skill_chosen == 'Body':
@@ -1792,7 +1956,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.department_not_chosen = False
             self.temp_item = self.itemsDisplay.toPlainText()
             self.itemsDisplay.setPlainText(self.temp_item + ', ' + self.dept_item_chosen)
-
+    
     def levelBox_changed(self):
         self.char_level = self.levelBox.currentIndex() + 1
     
@@ -1816,10 +1980,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.ageEdit.setDisabled(False)
                 self.genderEdit.setText(self.char_data['Gender'])
                 self.genderEdit.setDisabled(False)
+                self.temp_field = self.char_data['Rank']
+                self.rank_chosen = self.rank_choice.index(self.temp_field)
+                self.rankBox.setCurrentIndex(self.rank_chosen)
                 self.temp_field = self.char_data['Dept']
                 self.dept_chosen = self.dept_choice.index(self.temp_field)
                 self.deptBox.setCurrentIndex(self.dept_chosen)
-                self.rankDisplay.setText(self.char_data['Rank'])
                 self.bodyScore.setValue(self.char_data['BODY'])
                 self.bodyScore.setDisabled(True)
                 self.mindScore.setValue(self.char_data['MIND'])
@@ -1987,8 +2153,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.char_data['Clairvoyance'] = self.clairvoyanceSkill.value()
             self.char_data['Psychokinesis'] = self.psychokinesisSkill.value()
             self.char_data['Telepathy'] = self.telepathySkill.value()
+            self.char_data['Rank'] = self.rank_chosen
             self.char_data['Dept'] = self.dept_chosen
-            self.char_data['Rank'] =self.rankDisplay.text()
             self.char_data['ARMOR'] = self.armorDisplay.toPlainText()
             self.char_data['WEAPON'] = self.weaponDisplay.toPlainText()
             self.char_data['ITEMS'] = self.itemsDisplay.toPlainText()
@@ -2024,8 +2190,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pdf.cell(txt='Name: ' + self.charnameEdit.text(), ln=1)
         pdf.cell(txt='Age: ' + self.ageEdit.text(), ln=1)
         pdf.cell(txt='Gender: ' + self.genderEdit.text(), ln=1)
-        pdf.cell(txt='Dept: ' + self.dept_chosen, ln=1)
-        pdf.cell(txt='Rank: ' + self.rankDisplay.text(), ln=1)
+        pdf.cell(txt='Flag: ' + self.rank_chosen, ln=1)
+        pdf.cell(txt='Job: ' + self.dept_chosen, ln=1)
         pdf.cell(txt='Level: ' + str(self.char_level) + '    XP: ' + str(self.char_xp), ln=1)
         pdf.cell(txt=' ', ln=1)
         pdf.set_font('Times New Roman', '', 22)
