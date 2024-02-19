@@ -67,6 +67,10 @@ Things To-Do
 
 **Known History**
 
+* v0.1.0b
+
+  Updated character leveling.
+
 * v0.0.1b
 
   Initial release.
