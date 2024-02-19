@@ -69,7 +69,7 @@ Things To-Do
 
 * v0.1.0b
 
-  Updated character leveling.
+  Updated character leveling. Works with latest TPS Die Roller.
 
 * v0.0.1b
 
