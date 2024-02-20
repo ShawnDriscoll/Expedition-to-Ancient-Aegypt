@@ -67,6 +67,10 @@ Things To-Do
 
 **Known History**
 
+* v0.1.1b
+
+  Fixed skill and score caps when saving.
+
 * v0.1.0b
 
   Updated character leveling. Works with latest TPS Die Roller.

@@ -4,7 +4,7 @@
 #######################################################
 
 """
-ETAA Chargen 0.1.0 Beta
+ETAA Chargen 0.1.1 Beta
 -----------------------------------------------------------------------
 
 This program generates characters for the Expedition to Ancient Aegypt! RPG.
@@ -25,7 +25,7 @@ import json
 from fpdf import FPDF
 
 __author__ = 'Shawn Driscoll <shawndriscoll@hotmail.com>\nshawndriscoll.blogspot.com'
-__app__ = 'ETAA CharGen 0.1.0 (Beta)'
+__app__ = 'ETAA CharGen 0.1.1 (Beta)'
 __expired_tag__ = False
 
 class aboutDialog(QDialog, Ui_aboutDialog):
@@ -216,6 +216,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.xpEdit.textChanged.connect(self.xpValue_changed)
 
         self.next_level = 100
+
+        self.scoreCap = 3
+        self.skillCap = 3
 
         self.bodyScore.setMaximum(3)
         self.mindScore.setMaximum(3)
@@ -3190,6 +3193,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.additional_skill_points = 2
                 self.additional2Display.setText(str(self.additional_skill_points))
                 self.skilling_up = True
+                self.skillCap = 4
                 self.agilitySkill.setMaximum(4)
                 self.beautySkill.setMaximum(4)
                 self.strengthSkill.setMaximum(4)
@@ -3262,6 +3266,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.additional_skill_points = 3
                 self.additional2Display.setText(str(self.additional_skill_points))
                 self.skilling_up = True
+                self.skillCap = 5
                 self.agilitySkill.setMaximum(5)
                 self.beautySkill.setMaximum(5)
                 self.strengthSkill.setMaximum(5)
@@ -3322,6 +3327,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.additional_attribute_points = 1
                 self.additional1Display.setText(str(self.additional_attribute_points))
                 self.attributing_up = True
+                self.scoreCap = 4
                 self.bodyScore.setMaximum(4)
                 self.mindScore.setMaximum(4)
                 self.spiritScore.setMaximum(4)
@@ -3349,6 +3355,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.char_data = json.load(json_file)
                 self.format_read = self.char_data['Fileformat']
                 log.info('File format is: ' + str(self.format_read))
+                self.scoreCap = self.char_data['Scorecap']
+                self.bodyScore.setMaximum(self.scoreCap)
+                self.mindScore.setMaximum(self.scoreCap)
+                self.spiritScore.setMaximum(self.scoreCap)
+                self.skillCap = self.char_data['Skillcap']
+                self.agilitySkill.setMaximum(self.skillCap)
+                self.beautySkill.setMaximum(self.skillCap)
+                self.strengthSkill.setMaximum(self.skillCap)
+                self.knowledgeSkill.setMaximum(self.skillCap)
+                self.perceptionSkill.setMaximum(self.skillCap)
+                self.technologySkill.setMaximum(self.skillCap)
+                self.charismaSkill.setMaximum(self.skillCap)
+                self.empathySkill.setMaximum(self.skillCap)
+                self.focusSkill.setMaximum(self.skillCap)
+                self.boxingSkill.setMaximum(self.skillCap)
+                self.meleeSkill.setMaximum(self.skillCap)
+                self.rangedSkill.setMaximum(self.skillCap)
+                self.artSkill.setMaximum(self.skillCap)
+                self.languagesSkill.setMaximum(self.skillCap)
+                self.scienceSkill.setMaximum(self.skillCap)
+                self.blessSkill.setMaximum(self.skillCap)
+                self.exorcismSkill.setMaximum(self.skillCap)
+                self.healingSkill.setMaximum(self.skillCap)
+                self.demonologySkill.setMaximum(self.skillCap)
+                self.metamorphosisSkill.setMaximum(self.skillCap)
+                self.necromancySkill.setMaximum(self.skillCap)
+                self.psychokinesisSkill.setMaximum(self.skillCap)
+                self.clairvoyanceSkill.setMaximum(self.skillCap)
+                self.telepathySkill.setMaximum(self.skillCap)
                 self.charnameEdit.setText(self.char_data['Name'])
                 self.charnameEdit.setDisabled(False)
                 self.ageEdit.setText(self.char_data['Age'])
@@ -3525,6 +3560,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             json_file_out = open(self.char_folder + '/' + self.charnameEdit.text() + self.file_extension, 'w')
             self.char_data = {}
             self.char_data['Fileformat'] = self.file_format
+            self.char_data['Scorecap'] = self.scoreCap
+            self.char_data['Skillcap'] = self.skillCap
             self.char_data['Name'] = self.charnameEdit.text()
             self.char_data['Age'] = self.ageEdit.text()
             self.char_data['Gender'] = self.genderEdit.text()
